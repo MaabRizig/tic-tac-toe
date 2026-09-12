@@ -74,7 +74,11 @@ let gameBoard = (function(){
         if(i==rows)
             return firstMark;
 
-        return false;
+        let checkTie = !(gameBoardArr.some(row=>row.some(mark=>mark==undefined)));
+        if(checkTie)
+            return -1               // tie case
+
+        return false;             // game unfinished yet
     }
 
     function showBoard(){
@@ -111,20 +115,52 @@ function Player(mark,gameBoard){
 
 
 
+function playRound(){
+    let playerOne = Player(0,gameBoard);
+    let playerTwo = Player(1,gameBoard);
+    let x, y;
+    let players = [playerOne,playerTwo];
+    let currentPlayer = 0;
+
+    while(true){
+        [x,y] = prompt("choose a position").split(",").map(char=>+char);
+        try{
+            players[currentPlayer].choosePos(x,y);
+        }catch(error){
+            console.log(error.message);
+            continue;
+        }
+
+        let winner = gameBoard.checkWinner();
+        if(winner == -1){
+            console.log("It is a tie.");
+            console.table(gameBoard.showBoard());
+            return 0;
+        }else if(winner !== false){
+            console.log(`player ${winner} are the winner.kudos`);
+            console.table(gameBoard.showBoard());
+            return 0;
+        }
+        currentPlayer = (currentPlayer+1) % players.length;  
+    }
+}
 
 
+playRound();
+
 // console.table(gameBoard.showBoard());
-// gameBoard.setMark(0,1,1);
-// console.table(gameBoard.showBoard());
-// gameBoard.setMark(1,2,1);
-// gameBoard.setMark(0,3,1);
+// // Tie case
+// gameBoard.setMark(0,2,2);
+// gameBoard.setMark(1,1,1);
+// gameBoard.setMark(0,3,2);
+// gameBoard.setMark(1,1,2);
+// gameBoard.setMark(0,1,3);
+// gameBoard.setMark(1,3,1);
+// gameBoard.setMark(0,2,1);
+// gameBoard.setMark(1,2,3);
+// gameBoard.setMark(0,3,3);
 // console.table(gameBoard.showBoard());
 // console.log(gameBoard.checkWinner());
-// gameBoard.setMark(1,3,3);
-// console.table(gameBoard.showBoard());
-// gameBoard.resetBoard();
-// console.table(gameBoard.showBoard());
-
 
 // playerOne = Player(0,gameBoard);
 // playerTwo = Player(1,gameBoard);
