@@ -84,8 +84,32 @@ let gameBoard = (function(){
     function resetBoard(){
         gameBoardArr = Array.from({length:rows},()=>Array.from({length:cols},()=>undefined));
     }
-    return {setMark,checkWinner,showBoard,resetBoard};
+
+    function showMarks(){
+        return JSON.parse(JSON.stringify(marks));
+    }
+    return {setMark,checkWinner,showBoard,resetBoard,showMarks};
 })();
+
+
+function Player(mark,gameBoard){
+    
+    if(gameBoard.setMark === undefined || gameBoard.showMarks === undefined)
+        throw Error(`The given game board do not contain the necessary utilities `);
+
+    const gameMarks = gameBoard.showMarks();
+    if(!gameMarks.includes(mark))
+        throw Error(`Choose one of the marks in this list only: ${gameMarks}`);
+    
+
+    function choosePos(x,y){
+        gameBoard.setMark(mark,x,y);
+    }
+
+    return {choosePos};
+}
+
+
 
 
 
@@ -99,6 +123,14 @@ let gameBoard = (function(){
 // gameBoard.setMark(1,3,3);
 // console.table(gameBoard.showBoard());
 // gameBoard.resetBoard();
+// console.table(gameBoard.showBoard());
+
+
+// playerOne = Player(0,gameBoard);
+// playerTwo = Player(1,gameBoard);
+// playerOne.choosePos(1,1);
+// playerTwo.choosePos(2,1);
+
 // console.table(gameBoard.showBoard());
 
 
