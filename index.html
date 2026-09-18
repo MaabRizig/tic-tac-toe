@@ -7,7 +7,42 @@
     <title>Document</title>
 </head>
 <body>
-    
+
+    <div class="gameboard">
+        <div class="game-header hide">
+            <span class="player-one">Player 1</span>
+            <span class="player-two">Player 2</span>
+            <div class="markcard player-one">x</div>
+            <div class="markcard player-two">o</div>
+        </div>
+        <div class="game-screen hide">
+            <div class="result-screen hide">
+                <div class="tie hide">
+                    <span>it's a tie</span>
+                    <span>play again</span>
+                </div>
+                <div class="win hide">
+                    <img src="images/crown.svg" class="crown"/>
+                    <img src="images/x_icon.png" class="xo-icon"/>
+                    <span class="player-name">Winner</span>
+                    <span>kudos</span>
+                </div>
+            </div>
+            <div class="game-grid">
+                <div data-row="1" data-col="1"></div>
+                <div data-row="1" data-col="2"></div>
+                <div data-row="1" data-col="3"></div>
+                <div data-row="2" data-col="1"></div>
+                <div data-row="2" data-col="2"></div>
+                <div data-row="2" data-col="3"></div>
+                <div data-row="3" data-col="1"></div>
+                <div data-row="3" data-col="2"></div>
+                <div data-row="3" data-col="3"></div>
+            </div>
+        </div>
+        <div class="game-footer">
+            <button class="button">Start game</button>
+        </div>
 </body>
 <script src="main.js"></script>
 </html>

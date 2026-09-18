@@ -1,0 +1,125 @@
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+:root {
+    --clr-yellow-300: #ffff00;
+    --filter-yellow-300: brightness(0) saturate(100%) invert(91%) sepia(63%) saturate(7500%) hue-rotate(357deg) brightness(100%) contrast(104%);
+}
+
+body {
+    box-sizing: border-box;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    background-color: rgb(0,0,0);
+    color: white;
+}
+
+.gameboard > * {
+    margin-bottom: 30px;
+}
+
+.game-grid {
+    width: 400px;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template: repeat(3,1fr) / repeat(3,1fr);
+    gap: 2px;
+    background-color: var(--clr-yellow-300);
+}
+
+.game-grid > * {
+    background-color: rgb(0,0,0);
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+
+.game-header {
+    display: grid;
+    grid-template: repeat(2,20px) / repeat(2,1fr);
+}
+
+.game-header .player-one {
+    justify-self: start;
+}
+
+.game-header .player-two {
+    justify-self: end;
+}
+
+.game-header .markcard {
+    border-radius: 5px;
+    background-color: lightgray;
+    padding: 5px 10px;
+} 
+
+.game-screen {
+    position: relative;
+}
+
+.result-screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-weight: 900;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    z-index: 1;
+}
+
+.result-screen > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.button {
+    padding: 5px 10px;
+    font-size: 1.5em;
+    background-color: var(--clr-yellow-300);
+    color: black;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.button:hover {
+    opacity: 0.5;
+}
+
+
+.xo-icon, .crown {
+    filter: var(--filter-yellow-300);
+}
+
+.game-grid .xo-icon {
+    width: 80%;
+}
+
+.result-screen .crown{
+    width: 120px;
+}
+.result-screen .xo-icon {
+    width: 90px;
+    margin-top: -10px;
+    margin-bottom: 50px;
+}
+
+
+
+/* classes should be in the last to have higher priority */
+
+.hide {
+    display: none;
+}
