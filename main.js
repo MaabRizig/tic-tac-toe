@@ -81,23 +81,23 @@ let gameBoard = (function(){
         return false;             // game unfinished yet
     }
 
-    function showBoard(){
+    function getBoard(){
         return JSON.parse(JSON.stringify(gameBoardArr));
     }
 
     function resetBoard(){
         gameBoardArr = Array.from({length:rows},()=>Array.from({length:cols},()=>undefined));
+        roundToMarkIdx = 0;
     }
 
     function showMarks(){
         return JSON.parse(JSON.stringify(marks));
     }
-    return {setMark,checkWinner,showBoard,resetBoard,showMarks};
+    return {setMark,checkWinner,getBoard,resetBoard,showMarks};
 })();
 
 
-function Player(mark,gameBoard){
-    
+function Player(mark,gameBoard,name,iconUrl){
     if(gameBoard.setMark === undefined || gameBoard.showMarks === undefined)
         throw Error(`The given game board do not contain the necessary utilities `);
 
@@ -110,45 +110,123 @@ function Player(mark,gameBoard){
         gameBoard.setMark(mark,x,y);
     }
 
-    return {choosePos};
+    return {choosePos,name,iconUrl};
 }
 
 
+let displayDOM = (function(){
+    
+    const resultScreen = document.querySelector(".result-screen");
+    const gameHeader = document.querySelector(".game-header");
+    const gameScreen = document.querySelector(".game-screen");
+    const slots = document.querySelectorAll(".game-grid > div");
 
-function playRound(){
-    let playerOne = Player(0,gameBoard);
-    let playerTwo = Player(1,gameBoard);
+    function showBoard(){
+        let board = gameBoard.getBoard();
+        let currentIdx = 0;
+        
+        board.forEach((row)=>row.forEach((mark)=>{
+            mark = (mark==null)?"":mark;
+            slots[currentIdx].textContent = "";
+            if (mark === ""){
+                currentIdx++;
+                return;
+            }
+            let markIcon = document.createElement("img");
+            markIcon.classList.add("xo-icon");
+            if(mark === 0){
+                markIcon.src = "images/x_icon.png";
+            } else {
+                markIcon.src = "images/o_icon.png";
+            }   
+            slots[currentIdx].appendChild(markIcon);
+            currentIdx++;
+        }));
+    }
+
+    function showResult(status,playerObj){
+        resultScreen.style.display = "flex";
+        let tieSection = resultScreen.querySelector(".tie");
+        let winSection = resultScreen.querySelector(".win");
+        if(status == -1){
+            tieSection.classList.remove("hide");
+            winSection.classList.add("hide");
+            return;
+        }
+        tieSection.classList.add("hide");
+        winSection.classList.remove("hide");
+        let winnerIcon = winSection.querySelector(".xo-icon");
+        winnerIcon.src = playerObj.iconUrl;
+        // let winnerField = winSection.querySelector(".player-name");
+        // winnerField.textContent = `${playerObj.name} winner 🎉`;
+    }
+
+    function hideResult(){
+        resultScreen.style.display = "none";
+    }
+
+    function showGame(){
+        hideResult();
+        gameHeader.classList.remove("hide");
+        gameScreen.classList.remove("hide");
+        return;
+    }
+
+    return {showBoard,showResult,showGame};
+})();
+
+
+// Activate Game Logic
+
+(function(){
+    let playerOne = Player(0,gameBoard,"player1","images/x_icon.png");
+    let playerTwo = Player(1,gameBoard,"player2","images/o_icon.png");
     let x, y;
     let players = [playerOne,playerTwo];
     let currentPlayer = 0;
+    let gameGrid = document.querySelector(".game-grid");
 
-    while(true){
-        [x,y] = prompt("choose a position").split(",").map(char=>+char);
+    let gridSlotsEvent = gameGrid.addEventListener("click",(e)=>{
+        if (!(e.target.dataset.col && e.target.dataset.row))
+            return;
+        x = +e.target.dataset.row;
+        y = +e.target.dataset.col;
         try{
             players[currentPlayer].choosePos(x,y);
         }catch(error){
             console.log(error.message);
-            continue;
+            return;
         }
-
+        displayDOM.showBoard();
         let winner = gameBoard.checkWinner();
         if(winner == -1){
             console.log("It is a tie.");
-            console.table(gameBoard.showBoard());
+            console.table(gameBoard.getBoard());
+            displayDOM.showResult(winner);
             return 0;
         }else if(winner !== false){
             console.log(`player ${winner} are the winner.kudos`);
-            console.table(gameBoard.showBoard());
+            console.table(gameBoard.getBoard());
+            // let playerName = players[currentPlayer].name;
+            displayDOM.showResult(winner,players[currentPlayer]);
             return 0;
         }
         currentPlayer = (currentPlayer+1) % players.length;  
-    }
-}
+        
+    });
+
+    const resetGame = document.querySelector(".game-footer .button");
+    resetGame.addEventListener('click',(e)=>{
+        gameBoard.resetBoard();
+        displayDOM.showBoard();
+        displayDOM.showGame();
+        currentPlayer = 0;
+    });
+})();
 
 
-playRound();
 
-// console.table(gameBoard.showBoard());
+// console.table(gameBoard.getBoard());
 // // Tie case
 // gameBoard.setMark(0,2,2);
 // gameBoard.setMark(1,1,1);
@@ -159,7 +237,7 @@ playRound();
 // gameBoard.setMark(0,2,1);
 // gameBoard.setMark(1,2,3);
 // gameBoard.setMark(0,3,3);
-// console.table(gameBoard.showBoard());
+// console.table(gameBoard.getBoard());
 // console.log(gameBoard.checkWinner());
 
 // playerOne = Player(0,gameBoard);
@@ -167,6 +245,6 @@ playRound();
 // playerOne.choosePos(1,1);
 // playerTwo.choosePos(2,1);
 
-// console.table(gameBoard.showBoard());
+// console.table(gameBoard.getBoard());
 
 
