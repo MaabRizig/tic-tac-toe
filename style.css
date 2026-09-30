@@ -15,7 +15,7 @@ body {
     place-items: center;
     min-height: 100vh;
     background-color: rgb(0,0,0);
-    color: white;
+    color: var(--clr-yellow-300);
 }
 
 .gameboard > * {
@@ -40,8 +40,9 @@ body {
 
 .game-header {
     display: grid;
-    grid-template: repeat(2,20px) / repeat(2,1fr);
+    grid-template-columns: repeat(2,1fr);
 }
+
 
 .game-header .player-one {
     justify-self: start;
@@ -52,9 +53,10 @@ body {
 }
 
 .game-header .markcard {
+    width: 30px;
     border-radius: 5px;
-    background-color: lightgray;
-    padding: 5px 10px;
+    padding: 5px;
+
 } 
 
 .game-screen {
@@ -103,7 +105,7 @@ body {
     filter: var(--filter-yellow-300);
 }
 
-.game-grid .xo-icon {
+.xo-icon {
     width: 80%;
 }
 
@@ -122,4 +124,8 @@ body {
 
 .hide {
     display: none;
+}
+
+.disable-ui{
+    filter: brightness(20%);
 }

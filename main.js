@@ -120,6 +120,8 @@ let displayDOM = (function(){
     const gameHeader = document.querySelector(".game-header");
     const gameScreen = document.querySelector(".game-screen");
     const slots = document.querySelectorAll(".game-grid > div");
+    const headerPlayerOne = gameHeader.querySelectorAll(".player-one");
+    const headerPlayerTwo = gameHeader.querySelectorAll(".player-two"); 
 
     function showBoard(){
         let board = gameBoard.getBoard();
@@ -169,10 +171,21 @@ let displayDOM = (function(){
         hideResult();
         gameHeader.classList.remove("hide");
         gameScreen.classList.remove("hide");
+        togglePlayerUI();
         return;
     }
 
-    return {showBoard,showResult,showGame};
+    function togglePlayerUI(currentPlayerId = 0){
+        if(currentPlayerId){
+            headerPlayerOne.forEach(ele=>ele.classList.add("disable-ui"));
+            headerPlayerTwo.forEach(ele=>ele.classList.remove("disable-ui"));
+            return;
+        }
+        headerPlayerTwo.forEach(ele=>ele.classList.add("disable-ui"));
+        headerPlayerOne.forEach(ele=>ele.classList.remove("disable-ui"));
+    }
+
+    return {showBoard,showResult,showGame,togglePlayerUI};
 })();
 
 
@@ -212,6 +225,7 @@ let displayDOM = (function(){
             return 0;
         }
         currentPlayer = (currentPlayer+1) % players.length;  
+        displayDOM.togglePlayerUI(currentPlayer);
         
     });
 
